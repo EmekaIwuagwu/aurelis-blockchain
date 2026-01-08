@@ -14,7 +14,7 @@ services:
       - "18888:18888" # P2P Interface
     volumes:
       # Persist blockchain data
-      - ./chain_data:/app/blockchain.dat
+      - ./chain_data:/app/data
 
   # ---------------------------------------------------------------------------
   # Aurelis Wallet (Web Interface)
