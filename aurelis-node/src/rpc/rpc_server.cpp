@@ -14,6 +14,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
+#include <cerrno>
+#include <cstring>
 #endif
 
 namespace aurelis {
@@ -45,7 +47,11 @@ void RpcServer::Stop() {
 }
 
 void RpcServer::RunLoop() {
+#ifdef _WIN32
     SOCKET server_fd;
+#else
+    int server_fd;
+#endif
     struct sockaddr_in address;
     int addrlen = sizeof(address);
 
@@ -55,10 +61,17 @@ void RpcServer::RunLoop() {
     server_fd = socket(AF_INET, SOCK_STREAM, 0);
 #endif
 
+#ifdef _WIN32
     if (server_fd == INVALID_SOCKET) {
         std::cerr << "[ERROR] RPC Socket creation failed: " << WSAGetLastError() << std::endl;
         return;
     }
+#else
+    if (server_fd < 0) {
+        std::cerr << "[ERROR] RPC Socket creation failed: " << strerror(errno) << std::endl;
+        return;
+    }
+#endif
 
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
@@ -77,13 +90,21 @@ void RpcServer::RunLoop() {
     std::cout << "[INFO] RPC Server listening on port " << port << std::endl;
 
     while (running) {
+#ifdef _WIN32
         SOCKET new_socket;
+#else
+        int new_socket;
+#endif
 #ifdef _WIN32
         new_socket = accept(server_fd, (struct sockaddr *)&address, (int*)&addrlen);
 #else
         new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen);
 #endif
+#ifdef _WIN32
         if (new_socket == INVALID_SOCKET) continue;
+#else
+        if (new_socket < 0) continue;
+#endif
 
         // Use a detached thread for each request to prevent blocking
         std::thread([this, new_socket]() {
