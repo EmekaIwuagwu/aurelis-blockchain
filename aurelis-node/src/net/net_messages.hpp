@@ -20,7 +20,7 @@ struct NetMessageHeader {
     }
 
     void SetCommand(const std::string& cmd) {
-        for(int i=0; i<12; ++i) {
+        for(size_t i=0; i<12; ++i) {
             command[i] = (i < cmd.length()) ? cmd[i] : 0;
         }
     }
