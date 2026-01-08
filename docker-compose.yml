@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # ---------------------------------------------------------------------------
+  # Aurelis Node (Layer 1 Ledger)
+  # ---------------------------------------------------------------------------
+  node:
+    build: 
+      context: ./aurelis-node
+      dockerfile: Dockerfile
+    container_name: aurelis-node
+    ports:
+      - "18883:18883" # RPC Interface
+      - "18888:18888" # P2P Interface
+    volumes:
+      # Persist blockchain data
+      - ./chain_data:/app/blockchain.dat
+
+  # ---------------------------------------------------------------------------
+  # Aurelis Wallet (Web Interface)
+  # ---------------------------------------------------------------------------
+  wallet:
+    build: 
+      context: ./aurelis-wallet
+      dockerfile: Dockerfile
+    container_name: aurelis-wallet
+    ports:
+      - "3000:5173" # Maps internal Vite port 5173 to host 3000
+    depends_on:
+      - node
+    environment:
+      - VITE_RPC_URL=http://localhost:18883
+
+  # ---------------------------------------------------------------------------
+  # Aurelis Explorer (Blockchain Scanner)
+  # ---------------------------------------------------------------------------
+  explorer:
+    build: 
+      context: ./aurelis-explorer
+      dockerfile: Dockerfile
+    container_name: aurelis-explorer
+    ports:
+      - "3001:3001" # Maps configured port 3001 to host 3001
+    depends_on:
+      - node
+    environment:
+      - VITE_RPC_URL=http://localhost:18883

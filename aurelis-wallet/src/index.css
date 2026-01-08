@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,800;1,700;1,800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --background: 240 10% 4%;
+        --foreground: 0 0% 98%;
+        --card: 240 10% 6%;
+        --card-foreground: 0 0% 98%;
+        --popover: 240 10% 4%;
+        --popover-foreground: 0 0% 98%;
+        --primary: 47 65% 52%;
+        --primary-foreground: 240 5.9% 10%;
+        --secondary: 240 3.7% 15.9%;
+        --secondary-foreground: 0 0% 98%;
+        --muted: 240 3.7% 15.9%;
+        --muted-foreground: 240 5% 64.9%;
+        --accent: 240 3.7% 15.9%;
+        --accent-foreground: 0 0% 98%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 240 3.7% 15.9%;
+        --input: 240 3.7% 15.9%;
+        --ring: 47 65% 52%;
+        --radius: 0.75rem;
+    }
+
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground antialiased font-sans;
+    }
+}
+
+@layer utilities {
+    .gold-metallic-text {
+        @apply bg-clip-text text-transparent bg-gold-metallic;
+    }
+
+    .glass-dark {
+        @apply bg-black/60 backdrop-blur-3xl border border-white/5;
+        box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .animate-glow {
+        animation: glow 4s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+
+        0%,
+        100% {
+            opacity: 0.3;
+            transform: scale(1);
+        }
+
+        50% {
+            opacity: 0.6;
+            transform: scale(1.05);
+        }
+    }
+}
+
+.glass {
+    @apply bg-card/60 backdrop-blur-xl border border-white/10;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.gold-text {
+    @apply bg-clip-text text-transparent bg-gold-metallic;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.gold-button {
+    @apply bg-gold-metallic text-black font-extrabold uppercase tracking-widest transition-all;
+}
+
+.gold-button:hover {
+    @apply brightness-110;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+
+.gold-button:active {
+    @apply scale-95;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-background;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-zinc-800 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    @apply bg-zinc-700;
+}
